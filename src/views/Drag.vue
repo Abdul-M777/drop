@@ -62,15 +62,15 @@ export default {
     return {
       data: '',
       list1: [
-        { name: "1.html", id: 1, components: "<input placeholder='Write something'></input>" },
-        { name: "2.html", id: 2, components: '<p>Hello World</p>'},
-        { name: "3.html", id: 3, components: "<h1>This is a new Header</h1> <br> <p>This is a new Paragraph</p> <br> <img src='https://pressgazette.co.uk/wp-content/uploads/2020/11/shutterstock.jpg'>" },
-        { name: "4.html", id: 4, components: "<section style='background-color:#364838' class='py-20'>"+ 
-        "<div class='container mx-auto px-4 flex flex-wrap'>"+
-        "<div class='w-full md:w-1/4'>"+
-        "<div class='bg-yellow-50 rounded-lg pb-5 mx-10 mb-5'>" +
-        "<h3 class='text-green-900 font-bold text-xl text-center py-5'> AKSEL </h3>"},
-        {name: "5.html", id: 5, components: ''}
+        // { name: "1.html", id: 1, components: "<input placeholder='Write something'></input>" },
+        // { name: "2.html", id: 2, components: '<p>Hello World</p>'},
+        // { name: "3.html", id: 3, components: "<h1>This is a new Header</h1> <br> <p>This is a new Paragraph</p> <br> <img src='https://pressgazette.co.uk/wp-content/uploads/2020/11/shutterstock.jpg'>" },
+        // { name: "4.html", id: 4, components: "<section style='background-color:#364838' class='py-20'>"+ 
+        // "<div class='container mx-auto px-4 flex flex-wrap'>"+
+        // "<div class='w-full md:w-1/4'>"+
+        // "<div class='bg-yellow-50 rounded-lg pb-5 mx-10 mb-5'>" +
+        // "<h3 class='text-green-900 font-bold text-xl text-center py-5'> AKSEL </h3>"},
+        // {name: "5.html", id: 5, components: ''}
 
 
       ],
@@ -84,33 +84,48 @@ export default {
       window.console.log(evt);
     },
     cloneDog({ components }) {
-    //     fetch('hello.txt')
-    //       .then(response => response.text())
-    //       .then(data => {
-    //         this.data = data;
-  	// // Do something with your data
-  	//       console.log(this.data);
-    //     this.list1[4].components = this.data
-    //     console.log(this.list1[4])
-    //     console.log(this.data)
-        return {
+  return {
         id: idGlobal++,
-        // name: `${components}`
         components: components
       };
-  // });
   
     },
-  //   async getFile() {
-  //     this.data;
-  //    await fetch('hello.txt')
+    getFile() {
+      let urls = ['1.html', '2.html', '3.html', '4.html', '5.html'];
+
+
+      urls.forEach((url, i) => {
+        console.log(url)
+        fetch('html/'+url)
+          .then(response => response.text())
+          .then(data => {
+            console.log(data)
+            this.data = data
+            this.list1.push({name: i+'.html', id: i, components: this.data});
+            console.log(this.list1)
+            
+          })
+      })
+
+
+
+  //   fetch('html/1.html')
   //     .then(response => response.text())
   //     .then(data => {
+  //       console.log(data);
   //       this.data = data;
+
+  //       // this.list1[3].components = this.data
+  //       this.list1.push({name: '1.html', id: 6, components: this.data})
   // 	// Do something with your data
   // 	console.log(this.data);
   // });
-  //   },
+    },
+  },
+  created: function() {
+    // this.list1.push({name: '5.html', id: 5, components: '<h5>WOWOW H5</h5>'});
+
+    this.getFile();
   },
 };
 // getFile()
