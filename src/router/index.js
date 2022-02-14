@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Drag from '../views/Drag.vue'
 import Drop from '../views/Drop.vue'
+import Header from '../views/Header.vue'
+import Double from '../views/Double.vue'
 
 const routes = [
   {
@@ -19,6 +21,16 @@ const routes = [
     name: 'Drop',
     component: Drop
     },
+    {
+      path: '/header',
+      name: 'Header',
+      component: Header
+      },
+    {
+      path: '/double',
+      name: 'Double',
+      component: Double
+      },
 ]
 
 const router = createRouter({

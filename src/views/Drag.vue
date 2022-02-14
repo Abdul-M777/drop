@@ -99,9 +99,9 @@ export default {
         fetch('html/'+url)
           .then(response => response.text())
           .then(data => {
-            console.log(data)
+            // console.log(data)
             this.data = data
-            this.list1.push({name: i+'.html', id: i, components: this.data});
+            this.list1.push({name: i+1+'.html', id: i, components: this.data});
             console.log(this.list1)
             
           })
