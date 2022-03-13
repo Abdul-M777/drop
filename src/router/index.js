@@ -4,6 +4,8 @@ import Drag from '../views/Drag.vue'
 import Drop from '../views/Drop.vue'
 import Header from '../views/Header.vue'
 import Double from '../views/Double.vue'
+import Download from '../views/Download.vue'
+import DropDown from '../views/Dropdown.vue';
 
 const routes = [
   {
@@ -31,6 +33,16 @@ const routes = [
       name: 'Double',
       component: Double
       },
+      {
+        path: '/download',
+        name: 'Download',
+        component: Download
+        },
+        {
+          path: '/dropdown',
+          name: 'DropDown',
+          component: DropDown,
+        },
 ]
 
 const router = createRouter({
