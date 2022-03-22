@@ -5,7 +5,7 @@
       @click="showModal"
       v-show="upHere"
     >
-      Edit
+      Change
     </button>
     <button
       class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded absolute top-0 right-0"
@@ -14,7 +14,8 @@
     >
       Save
     </button>
-    <div class="header" ms-header v-html="header"></div>
+
+    <div id="header" class="header" ms-header v-html="header"></div>
 
     <modal v-show="isModalVisible" @close="closeModal">
       <template v-slot:header> Headers </template>
@@ -46,154 +47,240 @@
       @close="menuOpened = false"
       :element="item"
     ></editor-menu>
+
+    <add-menus-editor-menu :open="submenuOpened" @close="submenuOpened = false">
+    </add-menus-editor-menu>
   </div>
 </template>
 
 <script>
-import Modal from "../components/Modal.vue";
-import EditorMenu from "../components/EditorMenu.vue";
-import FileSaver from "file-saver";
-import axios from "axios";
+  import Modal from "../components/Modal.vue";
+  import EditorMenu from "../components/EditorMenu.vue";
+  import AddMenusEditorMenu from "../components/AddMenusEditorMenu.vue";
+  import FileSaver from "file-saver";
 
-export default {
-  components: {
-    Modal,
-    EditorMenu,
-  },
-  data() {
-    return {
-      upHere: true,
-      number: 1,
-      header: "",
-      isModalVisible: false,
-      item: "",
-      menuOpened: false,
-      save_btn: document.createElement("button"),
-      edit_btn: document.createElement("button"),
-      delete_btn: document.createElement("button"),
-      div: document.createElement("div"),
-      header_data: "",
-    };
-  },
-  methods: {
-    showModal() {
-      this.isModalVisible = true;
+  export default {
+    components: {
+      Modal,
+      EditorMenu,
+      AddMenusEditorMenu,
     },
-    closeModal() {
-      this.isModalVisible = false;
+    data() {
+      return {
+        upHere: true,
+        number: 1,
+        header: "",
+        isModalVisible: false,
+        item: "",
+        menuOpened: false,
+        submenuOpened: true,
+        save_btn: document.createElement("button"),
+        edit_btn: document.createElement("button"),
+        delete_btn: document.createElement("button"),
+        add_btn: document.createElement("button"),
+        addsubmenu_btn: document.createElement("button"),
+        div: document.createElement("div"),
+      };
     },
-    changeHeader(event) {
-      this.number = event.target.value;
-      this.getHeader(this.number);
-      this.isModalVisible = false;
-    },
-    getHeader(number) {
-      if (number == 1) {
-        fetch("/header/header-1.html")
-          .then((response) => response.text())
-          .then((data) => {
-            this.header = data;
-          });
-      } else if (number == 2) {
-        console.log(this.number);
-        fetch("/header/hello.html")
-          .then((response) => response.text())
-          .then((data) => {
-            this.header = data;
-          });
-      }
-    },
-    addEditAndDelete() {
-      this.edit_btn.textContent = "E";
-      this.edit_btn.setAttribute("id", "edit_element");
-      this.edit_btn.setAttribute(
-        "class",
-        "w-6 h-6 absolute -top-6 right-7 bg-white border border-gray-200 text-black rounded hover:bg-gray-200"
-      );
-      this.delete_btn.textContent = "X";
-      this.delete_btn.setAttribute("id", "delete_element");
-      this.delete_btn.setAttribute(
-        "class",
-        "w-6 h-6 absolute -top-6 right-0 bg-white border border-gray-200 text-black rounded hover:bg-gray-200"
-      );
-    },
-    checkAndRemoveEditAndDelete(event, item) {
-      let edit_exist = document.getElementById("edit_element");
-      let delete_exist = document.getElementById("delete_element");
-      if (
-        edit_exist &&
-        event.target.id != "edit_element" &&
-        delete_exist &&
-        event.target.id != "delete_element"
-      ) {
-        console.log(event.target.id);
-        document.getElementById("edit_element").remove();
-        document.getElementById("delete_element").remove();
-      } else if (!edit_exist && !delete_exist) {
-        console.log(event.target.id);
-
-        item.appendChild(this.edit_btn);
-        item.appendChild(this.delete_btn);
-      }
-    },
-    clickEdit() {
-      this.edit_btn.addEventListener("click", (event) => {
-        this.item = document.getElementById(event.target.parentNode.id);
-        this.menuOpened = true;
-      });
-    },
-    clickDelete(item) {
-      this.delete_btn.addEventListener("click", (event) => {
-        item = document.getElementById(event.target.parentNode.id);
-        if (item != null) {
-          item.remove();
+    methods: {
+      // This method is to show the Modal.
+      showModal() {
+        this.isModalVisible = true;
+      },
+      // This method is to close the Modal.
+      closeModal() {
+        this.isModalVisible = false;
+      },
+      // This method is to change the header based on the number.
+      changeHeader(event) {
+        this.number = event.target.value;
+        this.getHeader(this.number);
+        this.isModalVisible = false;
+      },
+      // This method is to pick a header from the header folder.
+      getHeader(number) {
+        if (number == 1) {
+          fetch("/header/header-1.html")
+            .then((response) => response.text())
+            .then((data) => {
+              this.header = data;
+            });
+        } else if (number == 2) {
+          console.log(this.number);
+          fetch("/header/hello.html")
+            .then((response) => response.text())
+            .then((data) => {
+              this.header = data;
+            });
         }
-      });
-    },
-    showEditAndDelete() {
-      // It works, but not as good as it should. Will work on it later.
-      let menu_items = [...document.querySelectorAll("[ms-header]")];
-      menu_items.forEach((item) => {
-        item.addEventListener("mouseover", (event) => {
-          if (event.target == document.getElementById("edit_element")) {
-            console.log(event.target);
-          } else {
-            this.item = document.getElementById(event.target.id);
-          }
-          if (this.item == null || this.item == "" || this.item == undefined) {
-          } else if (this.item) {
-            this.checkAndRemoveEditAndDelete(event, this.item);
-            this.clickEdit();
-            this.clickDelete(this.item);
+      },
+      // This method is to create the Edit and Delete buttons and their id's and classe's.
+      addEditAndDelete() {
+        this.edit_btn.textContent = "E";
+        this.edit_btn.setAttribute("id", "edit_element");
+        this.edit_btn.setAttribute(
+          "class",
+          "w-6 h-6 absolute -top-6 right-7 bg-white border border-gray-200 text-black rounded hover:bg-gray-200"
+        );
+        this.delete_btn.textContent = "X";
+        this.delete_btn.setAttribute("id", "delete_element");
+        this.delete_btn.setAttribute(
+          "class",
+          "w-6 h-6 absolute -top-6 right-0 bg-white border border-gray-200 text-black rounded hover:bg-gray-200"
+        );
+      },
+      // This method is to check if the Edit and Delete buttons exists or not.
+      // If the Buttons exits when they should not, they will be removed.
+      // If they do not exist and have to then we append them as a child for that element.
+      checkAndRemoveEditAndDelete(event, item) {
+        let edit_exist = document.getElementById("edit_element");
+        let delete_exist = document.getElementById("delete_element");
+        if (
+          edit_exist &&
+          event.target.id != "edit_element" &&
+          delete_exist &&
+          event.target.id != "delete_element" &&
+          event.target.id == ""
+        ) {
+          document.getElementById("edit_element").remove();
+          document.getElementById("delete_element").remove();
+        }
+        if (event.target.id) {
+          item.appendChild(this.edit_btn);
+          item.appendChild(this.delete_btn);
+        }
+      },
+      // This method is to show the editor menu.
+      clickEdit() {
+        this.edit_btn.addEventListener("click", (event) => {
+          this.item = document.getElementById(event.target.parentNode.id);
+          this.menuOpened = true;
+        });
+      },
+      // This method is to delete an element.
+      clickDelete(item) {
+        this.delete_btn.addEventListener("click", (event) => {
+          item = document.getElementById(event.target.parentNode.id);
+          if (item != null) {
+            item.remove();
           }
         });
-      });
-    },
-    clickSave() {
-      const header = [...document.querySelectorAll("[ms-header]")];
-      console.log(header);
-      header.forEach((element) => {
-        this.data = element;
-        let file = new File([this.data.innerHTML], "hello.html", {
-          type: "text/plain;charset=utf-8",
+      },
+      // This method is to show the Edit and Delete buttons.
+      // We call all the methods from this method.
+      showEditAndDelete() {
+        // It works, but not as good as it should. Will work on it later.
+        let menu_items = [...document.querySelectorAll("[ms-header]")];
+        menu_items.forEach((item) => {
+          item.addEventListener("mouseover", (event) => {
+            if (
+              event.target == document.getElementById("edit_element") ||
+              event.target == document.getElementById("delete_element")
+            ) {
+            } else {
+              this.item = document.getElementById(event.target.id);
+            }
+            this.createAddBtn();
+            this.clickAddBtn();
+            this.createSubMenuAddBtn();
+            this.clickSubMenuAddBtn();
+
+            if (this.item) {
+              this.checkAndRemoveEditAndDelete(event, this.item);
+              this.clickEdit();
+              this.clickDelete(this.item);
+            } else if (event.target) {
+              this.checkAndRemoveEditAndDelete(event, this.item);
+            }
+          });
         });
-        console.log(file);
-        FileSaver.saveAs(file);
-      });
+      },
+      // This method is to save the html into an html file.
+      // The file will be in the download folder.
+      // Then you have to copy/paste it in the public/html folder.
+      clickSave() {
+        const header = [...document.querySelectorAll("[ms-header]")];
+        console.log(header);
+        header.forEach((element) => {
+          this.data = element;
+          let file = new File([this.data.innerHTML], "hello.html", {
+            type: "text/plain;charset=utf-8",
+          });
+          console.log(file);
+          FileSaver.saveAs(file);
+        });
+      },
+      // This method is to create the add button.
+      createAddBtn() {
+        let menu_items = [...document.querySelectorAll("[ms-header]")];
+        menu_items.forEach((item) => {
+          console.log(item);
+          let sum = document.getElementById("group");
+          console.log(sum);
+          this.add_btn.textContent = "ADD MENU";
+          this.add_btn.setAttribute("id", "add_element");
+          this.add_btn.setAttribute(
+            "class",
+            "w-2/6 h-6 absoulte top-72 float-right bg-green-400 border border-gray-200 text-black rounded hover:bg-green-600"
+          );
+          if (sum != null) {
+            sum.appendChild(this.add_btn);
+          }
+        });
+      },
+      clickAddBtn() {
+        this.add_btn.addEventListener("click", (event) => {
+          this.item = document.getElementById(event.target.parentNode.id);
+          this.menuOpened = true;
+        });
+      },
+      createSubMenuAddBtn() {
+        let menu_items = [...document.querySelectorAll("[ms-header]")];
+        menu_items.forEach((item) => {
+          console.log(item);
+          let sum = document.getElementById("submenu");
+          console.log(sum);
+          this.addsubmenu_btn.textContent = "ADD SUBMENU";
+          this.addsubmenu_btn.setAttribute("id", "addsubmenu_element");
+          this.addsubmenu_btn.setAttribute(
+            "class",
+            "w-2/6 h-6 absoulte top-72 float-right bg-green-400 border border-gray-200 text-black rounded hover:bg-green-600"
+          );
+          if (sum != null) {
+            sum.appendChild(this.addsubmenu_btn);
+          }
+        });
+      },
+      clickSubMenuAddBtn() {
+        this.addsubmenu_btn.addEventListener("click", (event) => {
+          this.item = document.getElementById(event.target.parentNode.id);
+          this.menuOpened = true;
+        });
+      },
     },
-  },
-  mounted: function () {
-    this.getHeader(this.number);
-    this.showEditAndDelete();
-    this.addEditAndDelete();
-  },
-};
+    mounted: function () {
+      this.getHeader(this.number);
+      this.showEditAndDelete();
+      this.addEditAndDelete();
+      this.createAddBtn();
+    },
+  };
+
+  // TODO:
+  // Create a new Editor for adding menus and submenus.
+  // You should be able to add different submenus with the editormenu.
+  // Be able to add links from the menu to any editable element from the header.
+  //
+  //
+  // Remember: Take a look at the Editor menu you have made.
+  // You have to find a way to make it work.
+  // Either with props or data or any other thing.
 </script>
 
 <style>
-[ms-menu-item]:hover {
-  box-shadow: inset 0 0 0 1px #0bb783, 0 0 0 2px #0bb783;
-  border-radius: 2px;
-  cursor: pointer;
-}
+  [ms-menu-item]:hover {
+    box-shadow: inset 0 0 0 1px #0bb783, 0 0 0 2px #0bb783;
+    border-radius: 2px;
+    cursor: pointer;
+  }
 </style>

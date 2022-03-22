@@ -153,6 +153,25 @@
                       />
                     </div>
                   </div>
+
+                  <div class="mb-4">
+                    <label
+                      for="description"
+                      class="block text-sm font-medium text-gray-900 dark:text-gray-100"
+                      >Content</label
+                    >
+                    <textarea
+                      placeholder="Content text..."
+                      v-model="text"
+                      @input="changeText($event.target.value)"
+                      id="description"
+                      name="description"
+                      rows="4"
+                      class="dark:text-gray-100 dark:bg-gray-dark dark:border-gray-600 mt-1 p-2 block w-full shadow-sm sm:text-sm focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md"
+                    >
+                    </textarea>
+                  </div>
+
                   <div class="mb-4">
                     <label
                       class="block text-sm font-medium text-gray-900 mb-1 dark:text-gray-100"
@@ -224,250 +243,253 @@
 </template>
 
 <script>
-import {
-  Dialog,
-  DialogOverlay,
-  DialogTitle,
-  TransitionChild,
-  TransitionRoot,
-} from "@headlessui/vue";
-// import { XIcon } from '@heroicons/vue/outline'
-export default {
-  components: {
+  import {
     Dialog,
     DialogOverlay,
     DialogTitle,
     TransitionChild,
     TransitionRoot,
-    // XIcon,
-  },
-  props: {
-    open: {
-      type: Boolean,
-      required: true,
+  } from "@headlessui/vue";
+  // import { XIcon } from '@heroicons/vue/outline'
+  export default {
+    components: {
+      Dialog,
+      DialogOverlay,
+      DialogTitle,
+      TransitionChild,
+      TransitionRoot,
+      // XIcon,
     },
-    element: {
-      type: String,
-      required: true,
+    props: {
+      open: {
+        type: Boolean,
+        required: true,
+      },
+      element: {
+        type: String,
+        required: true,
+      },
     },
-  },
-  data() {
-    return {
-      textSize: "",
-      sizes: [
-        "xs",
-        "sm",
-        "base",
-        "lg",
-        "xl",
-        "2xl",
-        "3xl",
-        "4xl",
-        "5xl",
-        "6xl",
-        "7xl",
-        "8xl",
-        "9xl",
-      ],
-      textStyle: "",
-      styles: ["italic", "not-italic"],
-      textWeight: "",
-      weights: [
-        "thin",
-        "extralight",
-        "light",
-        "normal",
-        "medium",
-        "semibold",
-        "bold",
-        "extrabold",
-        "black",
-      ],
-      textFamily: "",
-      families: ["sans", "serif", "mono"],
-      colors: [
-        "white",
-        "black",
-        "gray-50",
-        "gray-100",
-        "gray-200",
-        "gray-300",
-        "gray-400",
-        "gray-500",
-        "gray-600",
-        "gray-700",
-        "gray-800",
-        "gray-900",
-        "red-50",
-        "red-100",
-        "red-200",
-        "red-300",
-        "red-400",
-        "red-500",
-        "red-600",
-        "red-700",
-        "red-800",
-        "red-900",
-        "yellow-50",
-        "yellow-100",
-        "yellow-200",
-        "yellow-300",
-        "yellow-400",
-        "yellow-500",
-        "yellow-600",
-        "yellow-700",
-        "yellow-800",
-        "yellow-900",
-        "green-50",
-        "green-100",
-        "green-200",
-        "green-300",
-        "green-400",
-        "green-500",
-        "green-600",
-        "green-700",
-        "green-800",
-        "green-900",
-        "blue-50",
-        "blue-100",
-        "blue-200",
-        "blue-300",
-        "blue-400",
-        "blue-500",
-        "blue-600",
-        "blue-700",
-        "blue-800",
-        "blue-900",
-        "indigo-50",
-        "indigo-100",
-        "indigo-200",
-        "indigo-300",
-        "indigo-400",
-        "indigo-500",
-        "indigo-600",
-        "indigo-700",
-        "indigo-800",
-        "indigo-900",
-        "purple-50",
-        "purple-100",
-        "purple-200",
-        "purple-300",
-        "purple-400",
-        "purple-500",
-        "purple-600",
-        "purple-700",
-        "purple-800",
-        "purple-900",
-        "pink-50",
-        "pink-100",
-        "pink-200",
-        "pink-300",
-        "pink-400",
-        "pink-500",
-        "pink-600",
-        "pink-700",
-        "pink-800",
-        "pink-900",
-      ],
-      opacityIndex: "",
-      opacities: [
-        "0",
-        "5",
-        "10",
-        "20",
-        "25",
-        "30",
-        "40",
-        "50",
-        "60",
-        "70",
-        "75",
-        "80",
-        "90",
-        "95",
-        "100",
-      ],
-      customBgColor: "",
-      customTxtColor: "",
-    };
-  },
-  methods: {
-    changeTextSize() {
-      this.sizes.forEach((size) => {
-        var reg = RegExp("text-" + size);
-        if (this.element.className.match(reg) != null) {
-          this.element.classList.remove(this.element.className.match(reg)[0]);
+    data() {
+      return {
+        textSize: "",
+        sizes: [
+          "xs",
+          "sm",
+          "base",
+          "lg",
+          "xl",
+          "2xl",
+          "3xl",
+          "4xl",
+          "5xl",
+          "6xl",
+          "7xl",
+          "8xl",
+          "9xl",
+        ],
+        textStyle: "",
+        styles: ["italic", "not-italic"],
+        textWeight: "",
+        weights: [
+          "thin",
+          "extralight",
+          "light",
+          "normal",
+          "medium",
+          "semibold",
+          "bold",
+          "extrabold",
+          "black",
+        ],
+        textFamily: "",
+        families: ["sans", "serif", "mono"],
+        colors: [
+          "white",
+          "black",
+          "gray-50",
+          "gray-100",
+          "gray-200",
+          "gray-300",
+          "gray-400",
+          "gray-500",
+          "gray-600",
+          "gray-700",
+          "gray-800",
+          "gray-900",
+          "red-50",
+          "red-100",
+          "red-200",
+          "red-300",
+          "red-400",
+          "red-500",
+          "red-600",
+          "red-700",
+          "red-800",
+          "red-900",
+          "yellow-50",
+          "yellow-100",
+          "yellow-200",
+          "yellow-300",
+          "yellow-400",
+          "yellow-500",
+          "yellow-600",
+          "yellow-700",
+          "yellow-800",
+          "yellow-900",
+          "green-50",
+          "green-100",
+          "green-200",
+          "green-300",
+          "green-400",
+          "green-500",
+          "green-600",
+          "green-700",
+          "green-800",
+          "green-900",
+          "blue-50",
+          "blue-100",
+          "blue-200",
+          "blue-300",
+          "blue-400",
+          "blue-500",
+          "blue-600",
+          "blue-700",
+          "blue-800",
+          "blue-900",
+          "indigo-50",
+          "indigo-100",
+          "indigo-200",
+          "indigo-300",
+          "indigo-400",
+          "indigo-500",
+          "indigo-600",
+          "indigo-700",
+          "indigo-800",
+          "indigo-900",
+          "purple-50",
+          "purple-100",
+          "purple-200",
+          "purple-300",
+          "purple-400",
+          "purple-500",
+          "purple-600",
+          "purple-700",
+          "purple-800",
+          "purple-900",
+          "pink-50",
+          "pink-100",
+          "pink-200",
+          "pink-300",
+          "pink-400",
+          "pink-500",
+          "pink-600",
+          "pink-700",
+          "pink-800",
+          "pink-900",
+        ],
+        opacityIndex: "",
+        opacities: [
+          "0",
+          "5",
+          "10",
+          "20",
+          "25",
+          "30",
+          "40",
+          "50",
+          "60",
+          "70",
+          "75",
+          "80",
+          "90",
+          "95",
+          "100",
+        ],
+        customBgColor: "",
+        customTxtColor: "",
+      };
+    },
+    methods: {
+      changeTextSize() {
+        this.sizes.forEach((size) => {
+          var reg = RegExp("text-" + size);
+          if (this.element.className.match(reg) != null) {
+            this.element.classList.remove(this.element.className.match(reg)[0]);
+          }
+        });
+        this.element.classList.add("text-" + this.textSize);
+      },
+      changeTextWeight() {
+        this.weights.forEach((weight) => {
+          var reg = RegExp("font-" + weight);
+          if (this.element.className.match(reg) != null) {
+            this.element.classList.remove(this.element.className.match(reg)[0]);
+          }
+        });
+        this.element.classList.add("font-" + this.textWeight);
+      },
+      changeTextFamily() {
+        this.families.forEach((family) => {
+          var reg = RegExp("font-" + family);
+          if (this.element.className.match(reg) != null) {
+            this.element.classList.remove(this.element.className.match(reg)[0]);
+          }
+        });
+        this.element.classList.add("font-" + this.textFamily);
+      },
+      changeTextStyle() {
+        this.styles.forEach((style) => {
+          var reg = RegExp(style);
+          if (this.element.className.match(reg) != null) {
+            this.element.classList.remove(this.element.className.match(reg)[0]);
+          }
+        });
+        this.element.classList.add(this.textStyle);
+      },
+      changeOpacity() {
+        this.opacities.forEach((o) =>
+          this.element.classList.remove("opacity-" + o)
+        );
+        this.element.classList.add(
+          "opacity-" + this.opacities[this.opacityIndex]
+        );
+      },
+      changeTxtColorCustom() {
+        this.colors.forEach((color) =>
+          this.element.classList.remove("text-" + color)
+        ); //remove any colors that are currently in the classList so there is not a color specified in a class and as a style
+        this.element.style.color = this.customTxtColor;
+      },
+      changeTxtColor(color) {
+        if ((this.element.style.color = !"")) {
+          this.element.style.color = "";
         }
-      });
-      this.element.classList.add("text-" + this.textSize);
-    },
-    changeTextWeight() {
-      this.weights.forEach((weight) => {
-        var reg = RegExp("font-" + weight);
-        if (this.element.className.match(reg) != null) {
-          this.element.classList.remove(this.element.className.match(reg)[0]);
+        this.customTxtColor = "";
+        this.colors.forEach((color) =>
+          this.element.classList.remove("text-" + color)
+        );
+        this.element.classList.add(color);
+      },
+      changeBgColorCustom() {
+        this.colors.forEach((color) =>
+          this.element.classList.remove("bg-" + color)
+        ); //remove any colors that are currently in the classList so there is not a color specified in a class and as a style
+        this.element.style.backgroundColor = this.customBgColor;
+      },
+      changeBgColor(color) {
+        if ((this.element.style.backgroundColor = !"")) {
+          this.element.style.backgroundColor = "";
         }
-      });
-      this.element.classList.add("font-" + this.textWeight);
+        this.customBgColor = "";
+        this.colors.forEach((color) =>
+          this.element.classList.remove("bg-" + color)
+        );
+        this.element.classList.add(color);
+      },
+      changeText(value) {
+        this.element.innerHTML = value;
+      },
     },
-    changeTextFamily() {
-      this.families.forEach((family) => {
-        var reg = RegExp("font-" + family);
-        if (this.element.className.match(reg) != null) {
-          this.element.classList.remove(this.element.className.match(reg)[0]);
-        }
-      });
-      this.element.classList.add("font-" + this.textFamily);
-    },
-    changeTextStyle() {
-      this.styles.forEach((style) => {
-        var reg = RegExp(style);
-        if (this.element.className.match(reg) != null) {
-          this.element.classList.remove(this.element.className.match(reg)[0]);
-        }
-      });
-      this.element.classList.add(this.textStyle);
-    },
-    changeOpacity() {
-      this.opacities.forEach((o) =>
-        this.element.classList.remove("opacity-" + o)
-      );
-      this.element.classList.add(
-        "opacity-" + this.opacities[this.opacityIndex]
-      );
-    },
-    changeTxtColorCustom() {
-      this.colors.forEach((color) =>
-        this.element.classList.remove("text-" + color)
-      ); //remove any colors that are currently in the classList so there is not a color specified in a class and as a style
-      this.element.style.color = this.customTxtColor;
-    },
-    changeTxtColor(color) {
-      if ((this.element.style.color = !"")) {
-        this.element.style.color = "";
-      }
-      this.customTxtColor = "";
-      this.colors.forEach((color) =>
-        this.element.classList.remove("text-" + color)
-      );
-      this.element.classList.add(color);
-    },
-    changeBgColorCustom() {
-      this.colors.forEach((color) =>
-        this.element.classList.remove("bg-" + color)
-      ); //remove any colors that are currently in the classList so there is not a color specified in a class and as a style
-      this.element.style.backgroundColor = this.customBgColor;
-    },
-    changeBgColor(color) {
-      if ((this.element.style.backgroundColor = !"")) {
-        this.element.style.backgroundColor = "";
-      }
-      this.customBgColor = "";
-      this.colors.forEach((color) =>
-        this.element.classList.remove("bg-" + color)
-      );
-      this.element.classList.add(color);
-    },
-  },
-};
+  };
 </script>
