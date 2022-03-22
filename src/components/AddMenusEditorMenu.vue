@@ -68,7 +68,7 @@
                     <div class="mb-4">
                       <button
                         class="basis-full w-full btn bg-green-500 font-bold mb-3"
-                        @click="addName"
+                        @click="addName()"
                       >
                         Save
                       </button>
@@ -125,6 +125,7 @@
       addName() {
         console.log(this.textName);
         console.log(this.textLink);
+        this.$emit("name", this.textName);
       },
       addLink() {
         console.log("hello");

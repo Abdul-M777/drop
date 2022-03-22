@@ -48,7 +48,11 @@
       :element="item"
     ></editor-menu>
 
-    <add-menus-editor-menu :open="submenuOpened" @close="submenuOpened = false">
+    <add-menus-editor-menu
+      :open="submenuOpened"
+      @close="submenuOpened = false"
+      @name="newMenu"
+    >
     </add-menus-editor-menu>
   </div>
 </template>
@@ -80,6 +84,8 @@
         add_btn: document.createElement("button"),
         addsubmenu_btn: document.createElement("button"),
         div: document.createElement("div"),
+        li: document.createElement("li"),
+        a: document.createElement("a"),
       };
     },
     methods: {
@@ -106,7 +112,6 @@
               this.header = data;
             });
         } else if (number == 2) {
-          console.log(this.number);
           fetch("/header/hello.html")
             .then((response) => response.text())
             .then((data) => {
@@ -169,6 +174,7 @@
       // This method is to show the Edit and Delete buttons.
       // We call all the methods from this method.
       showEditAndDelete() {
+        console.log(this.$emit("name"));
         // It works, but not as good as it should. Will work on it later.
         let menu_items = [...document.querySelectorAll("[ms-header]")];
         menu_items.forEach((item) => {
@@ -200,13 +206,23 @@
       // Then you have to copy/paste it in the public/html folder.
       clickSave() {
         const header = [...document.querySelectorAll("[ms-header]")];
-        console.log(header);
         header.forEach((element) => {
+          if (document.getElementById("add_element")) {
+            document.getElementById("add_element").remove();
+          }
+          if (document.getElementById("addsubmenu_element")) {
+            document.getElementById("addsubmenu_element").remove();
+          }
+          if (document.getElementById("add_element")) {
+            document.getElementById("add_element").remove();
+          }
+          if (document.getElementById("delete_element")) {
+            document.getElementById("delete_element");
+          }
           this.data = element;
           let file = new File([this.data.innerHTML], "hello.html", {
             type: "text/plain;charset=utf-8",
           });
-          console.log(file);
           FileSaver.saveAs(file);
         });
       },
@@ -214,9 +230,7 @@
       createAddBtn() {
         let menu_items = [...document.querySelectorAll("[ms-header]")];
         menu_items.forEach((item) => {
-          console.log(item);
           let sum = document.getElementById("group");
-          console.log(sum);
           this.add_btn.textContent = "ADD MENU";
           this.add_btn.setAttribute("id", "add_element");
           this.add_btn.setAttribute(
@@ -237,9 +251,7 @@
       createSubMenuAddBtn() {
         let menu_items = [...document.querySelectorAll("[ms-header]")];
         menu_items.forEach((item) => {
-          console.log(item);
           let sum = document.getElementById("submenu");
-          console.log(sum);
           this.addsubmenu_btn.textContent = "ADD SUBMENU";
           this.addsubmenu_btn.setAttribute("id", "addsubmenu_element");
           this.addsubmenu_btn.setAttribute(
@@ -257,6 +269,13 @@
           this.menuOpened = true;
         });
       },
+      newMenu(value) {
+        console.log(value);
+        this.a.textContent = value;
+        this.a.setAttribute("id", value);
+        this.a.setAttribute("href", value);
+        document.body.appendChild(this.a);
+      },
     },
     mounted: function () {
       this.getHeader(this.number);
@@ -270,11 +289,9 @@
   // Create a new Editor for adding menus and submenus.
   // You should be able to add different submenus with the editormenu.
   // Be able to add links from the menu to any editable element from the header.
+  // Use your editor to edit already existing menus and submenus.
+  // Maybe create a footer.
   //
-  //
-  // Remember: Take a look at the Editor menu you have made.
-  // You have to find a way to make it work.
-  // Either with props or data or any other thing.
 </script>
 
 <style>
